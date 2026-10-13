@@ -26,21 +26,26 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; -webkit-tap-highlight-color: transparent; }
     
+    /* 核心修正：將頂部標題、搜尋框與頁籤打包在同一 sticky 容器內，確保滑動時完美置頂 */
+    .sticky-header-container {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
     header {
       background: var(--primary);
       color: white;
-      padding: 18px 16px 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 14px 16px 12px;
     }
-    header h1 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
-    header p { font-size: 0.75rem; opacity: 0.85; }
+    header h1 { font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; }
+    header p { font-size: 0.72rem; opacity: 0.85; }
 
     .search-box {
-      margin-top: 10px;
-      position: relative;
+      margin-top: 8px;
     }
     .search-box input {
       width: 100%;
@@ -53,24 +58,22 @@
       outline: none;
     }
 
-    /* Tabs */
+    /* 頁籤列 */
     .nav-tabs {
       display: flex;
       background: white;
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 92px;
-      z-index: 99;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
     .nav-tabs::-webkit-scrollbar { display: none; }
     .nav-tab {
       flex: 1;
-      min-width: 72px;
+      min-width: 76px;
       text-align: center;
-      padding: 12px 6px;
-      font-size: 0.85rem;
+      padding: 11px 6px;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-muted);
       border-bottom: 3px solid transparent;
@@ -83,7 +86,7 @@
       background: var(--primary-light);
     }
 
-    /* Summary Bar */
+    /* 統計欄位 */
     .summary-banner {
       background: white;
       margin: 12px;
@@ -95,10 +98,10 @@
       align-items: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .summary-title { font-size: 0.8rem; color: var(--text-muted); }
+    .summary-title { font-size: 0.78rem; color: var(--text-muted); }
     .summary-val { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
 
-    /* Card List */
+    /* 清單與卡片樣式 */
     .container { padding: 0 12px; }
     .item-card {
       background: var(--card-bg);
@@ -108,7 +111,6 @@
       border: 1px solid var(--border);
       box-shadow: 0 2px 4px rgba(0,0,0,0.03);
       position: relative;
-      transition: transform 0.1s;
     }
     .item-card.checked {
       opacity: 0.55;
@@ -128,6 +130,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      cursor: pointer;
     }
     .check-btn {
       width: 22px;
@@ -137,514 +140,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       font-size: 14px;
       font-weight: bold;
       color: white;
       background: white;
+      flex-shrink: 0;
     }
     .item-card.checked .check-btn {
       background: var(--primary);
       border-color: var(--primary);
     }
 
-    .item-name { font-size: 1rem; font-weight: 700; color: #1A202C; }
-    .item-qty { font-size: 0.8rem; color: var(--text-muted); margin-left: 4px; font-weight: normal; }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 7px;
-      border-radius: 6px;
-      letter-spacing: 0.2px;
-    }
-    .badge-must { background: var(--must-bg); color: var(--must); border: 1px solid #C6F6D5; }
-    .badge-maybe { background: var(--maybe-bg); color: var(--maybe); border: 1px solid #FEEBC8; }
-    .badge-avoid { background: var(--avoid-bg); color: var(--avoid); border: 1px solid #FED7D7; }
-    .badge-jp { background: var(--jp-bg); color: var(--jp); border: 1px solid #FEB2B2; margin-left: 4px; }
-
-    .brand-row {
-      margin: 6px 0;
-      padding: 6px 10px;
-      background: #F7FAFC;
-      border-radius: 6px;
-      font-size: 0.82rem;
-    }
-    .brand-label { font-weight: 600; color: #4A5568; }
-    .brand-name { color: #2B6CB0; font-weight: 600; }
-
-    .channel-row {
-      margin: 6px 0;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-    }
-    .channel-tag {
-      background: #EDF2F7;
-      color: #4A5568;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-    .channel-desc { color: #4A5568; line-height: 1.35; }
-
-    .note-row {
-      margin-top: 8px;
-      font-size: 0.78rem;
-      color: #718096;
-      line-height: 1.4;
-      border-top: 1px dashed var(--border);
-      padding-top: 6px;
-    }
-    .price-row {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-top: 6px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #2D3748;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>👶 新生兒育兒採購指南</h1>
-    <p>點擊可打勾標記購買進度｜含通路與日本必買評估</p>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 搜尋品項、品牌、通路（如：貝親、日本、澡盆）" oninput="filterItems()">
-    </div>
-  </header>
-
-  <nav class="nav-tabs">
-    <div class="nav-tab active" onclick="switchTab('all', this)">全部清單</div>
-    <div class="nav-tab" onclick="switchTab('jp', this)">🇯🇵 日本必買</div>
-    <div class="nav-tab" onclick="switchTab('feed', this)">🍼 哺育餵養</div>
-    <div class="nav-tab" onclick="switchTab('sleep', this)">🛏️ 睡眠安撫</div>
-    <div class="nav-tab" onclick="switchTab('bath', this)">🛁 沐浴護理</div>
-    <div class="nav-tab" onclick="switchTab('out', this)">🚗 外出衣物</div>
-    <div class="nav-tab" onclick="switchTab('avoid', this)">⚠️ 避坑清單</div>
-  </nav>
-
-  <div class="summary-banner">
-    <div>
-      <div class="summary-title">★ 必買項目完成度</div>
-      <div class="summary-val" id="progressVal">0 / 14 項</div>
-    </div>
-    <div>
-      <div class="summary-title">★ 必買估算總預算</div>
-      <div class="summary-val" style="color:#C53030;">NT$ 44,750</div>
-    </div>
-  </div>
-
-  <div class="container" id="itemList">
-    <!-- Items rendered dynamically via JavaScript -->
-  </div>
-
-  <script>
-    const items = [
-      // 哺育與餵養
-      {
-        cat: 'feed',
-        name: '全自動洗奶瓶機',
-        qty: '1 台',
-        status: 'must',
-        price: '約 NT$ 8,500',
-        brand: 'Giaretti 珈樂堤 (CLOUD-2 / GT-WB8S)、one-meter 小白機',
-        channel: '🇹🇼 台灣代理電商 (momo / 蝦皮官網) 或婦幼展現場合購',
-        jpNote: '❌ 不建議日本買：電壓規格不符(100V vs 110V)，無在地保固且行李超重',
-        notes: '時間救星！高溫沖洗+高溫蒸氣殺菌+熱風烘乾。Giaretti 12L大容量具獨立烘乾模式實用性最高。'
-      },
-      {
-        cat: 'feed',
-        name: '70°C定溫調乳/溫奶機',
-        qty: '1 台',
-        status: 'must',
-        price: '約 NT$ 4,500',
-        brand: 'Giaretti (GT-BWHA01)、小獅王辛巴 (S5 PRO)',
-        channel: '🇹🇼 台灣安琪兒、甜蜜家族婦嬰連鎖店、momo購物網',
-        jpNote: '❌ 不建議日本買：大功率加熱電器，建議在台灣買享有一年原廠安全保固',
-        notes: '配方奶泡奶必須 70°C 熱水殺滅致病菌；母乳解凍則需 40°C 隔水溫和加熱。'
-      },
-      {
-        cat: 'feed',
-        name: '嬰兒寬口奶瓶 (玻璃/PPSU)',
-        qty: '4～6 支',
-        status: 'must',
-        price: '約 NT$ 2,500',
-        brand: '小獅王辛巴 (蘊蜜系列)、日本貝親 Pigeon (第三代母乳實感)',
-        channel: '🇹🇼 台灣大樹藥局、momo；🇯🇵 奶瓶日本阿卡將本舖有特殊花色款',
-        jpNote: '✨ 適合日本買：日本限定版花色 PPSU 奶瓶定價較甜，有逛到可順手收',
-        notes: '搭配洗奶瓶機以4-6支輪替最順暢。首推「小獅王瓶身搭配貝親母乳實感奶嘴」。'
-      },
-      {
-        cat: 'feed',
-        name: '貝親母乳實感奶嘴頭 (S/M/L)',
-        qty: '4～6 顆',
-        status: 'must',
-        price: '約 NT$ 800',
-        brand: '日本貝親 Pigeon 第三代奶嘴頭',
-        channel: '🇯🇵 日本阿卡將本舖、松本清藥妝；🇹🇼 台灣各大婦幼專賣店',
-        isJpHighlight: true,
-        jpNote: '🇯🇵 【日本必買首選】台灣專櫃一顆約180元，日本退稅後約5-6折！2-3個月需換一次，建議直接掃 S、M、L 各2組',
-        notes: '母乳實感專利設計不易造成乳頭混淆，為台灣各大月中標準吸吮首選。'
-      },
-      {
-        cat: 'feed',
-        name: '奶瓶專用清潔劑 (低泡)',
-        qty: '1～2 瓶',
-        status: 'must',
-        price: '約 NT$ 450',
-        brand: 'nac nac、貝親 Pigeon、淨淨 CleanClean',
-        channel: '🇹🇼 台灣藥局、婦幼用品店、蝦皮直營店',
-        jpNote: '體積重量偏大，直接在台灣電商特價補貨即可',
-        notes: '洗奶瓶機務必使用低泡洗劑，避免大量泡沫溢出感應槽。'
-      },
-      {
-        cat: 'feed',
-        name: '母乳冷凍袋',
-        qty: '1 盒',
-        status: 'maybe',
-        price: '約 NT$ 250',
-        brand: '小獅王辛巴、貝親 Pigeon、Lansinoh',
-        channel: '🇹🇼 屈臣氏、康是美、婦幼用品店；🇯🇵 日本藥妝店亦便宜',
-        jpNote: '體積輕薄，出月中確認母奶充沛、有多餘庫存需冷凍再買',
-        notes: '產前不需囤積，很多媽媽初期親餵或配方奶混餵完全用不到。'
-      },
-
-      // 睡眠與安撫
-      {
-        cat: 'sleep',
-        name: '嬰兒床邊床 / 多功能成長床',
-        qty: '1 張',
-        status: 'must',
-        price: '約 NT$ 7,500',
-        brand: 'Chicco (Next2Me Magic Evo)、BENDi、IKEA',
-        channel: '🇹🇼 台灣實體婦幼門市 (試推與看木質高度)、IKEA、Chicco 專櫃',
-        jpNote: '❌ 勿日本買：材積超大超重，國際運費或託運費極高',
-        notes: '同房不同床是預防嬰兒猝死症 (SIDS) 核心原則。床邊床半夜降欄塞奶嘴極度省力。'
-      },
-      {
-        cat: 'sleep',
-        name: '高透氣硬質床墊',
-        qty: '1 張',
-        status: 'must',
-        price: '約 NT$ 3,500',
-        brand: 'Cani 結構透氣有機棉床墊、GIO Pillow 透氣墊',
-        channel: '🇹🇼 台灣 Cani 官網、百貨專櫃、婦幼展',
-        jpNote: '在台灣選購符合台灣嬰兒床規格尺寸即可',
-        notes: '嬰兒床墊切記不可過軟！偏硬支撐與高透氣水洗纖維能有效防範趴睡口鼻掩蓋窒息。'
-      },
-      {
-        cat: 'sleep',
-        name: '蝶型包巾 (Swaddle)',
-        qty: '2～3 件',
-        status: 'must',
-        price: '約 NT$ 2,800',
-        brand: '澳洲 Love To Dream (Stage 1 輕薄款)',
-        channel: '🇹🇼 翔盛國際 baby888 門市、momo直營、母嬰社團二手',
-        jpNote: '澳洲品牌在台灣常有特惠，日本非主要產地價差不大',
-        notes: '壓制莫羅驚嚇反射、安撫睡過夜的神器！雙手上舉專利剪裁讓寶寶吸手自我安撫。'
-      },
-      {
-        cat: 'sleep',
-        name: '10mois 蘑菇六層紗防踢被',
-        qty: '1～2 件',
-        status: 'maybe',
-        price: '約 NT$ 1,200',
-        brand: '10mois (Hoppetta) 日本六層紗',
-        channel: '🇯🇵 日本阿卡將本舖、專櫃免稅；🇹🇼 台灣百貨專櫃 (約NT$1,980)',
-        isJpHighlight: true,
-        jpNote: '🇯🇵 【日本必買】台灣專櫃近兩千，日本免稅買約 NT$1,100～1,300，透氣防著涼、越洗越鬆軟！',
-        notes: '寶寶3個月脫離包巾後踢被子時的守護神，四季皆宜。'
-      },
-      {
-        cat: 'sleep',
-        name: '防水保潔墊 / 隔尿墊',
-        qty: '2～3 片',
-        status: 'must',
-        price: '約 NT$ 1,200',
-        brand: '媽媽餵 Mamaway、喜福 HiBOU',
-        channel: '🇹🇼 媽媽餵門市、蝦皮商城、母嬰百貨',
-        jpNote: '台灣品牌吸水防漏品質即非常優秀',
-        notes: '鋪在床墊上，炸屎、溢奶只需抽換清洗保潔墊，保全昂貴床墊不發霉。'
-      },
-      {
-        cat: 'sleep',
-        name: '安撫奶嘴',
-        qty: '2 顆',
-        status: 'must',
-        price: '約 NT$ 350',
-        brand: 'PHILIPS 飛利浦香草奶嘴 (Soothie)、BIBS 丹麥橡膠奶嘴',
-        channel: '🇹🇼 台灣各大婦幼用品店、大樹藥局、月中販賣機',
-        jpNote: '台灣藥局取得極為容易且價格平實',
-        notes: '新生兒口腔期安撫必備。建議準備香草奶嘴（多數月中同款）與圓頭款各一。'
-      },
-
-      // 沐浴與護理
-      {
-        cat: 'bath',
-        name: '嬰兒澡盆 (含防滑底座/架)',
-        qty: '1 組',
-        status: 'must',
-        price: '約 NT$ 2,500',
-        brand: '英國 Shnuggle 月亮澡盆 (感溫水塞版 + U2立架)',
-        channel: '🇹🇼 BabyGarden 官網、安琪兒、俏媽咪母嬰生活館',
-        jpNote: '❌ 體積龐大不宜托運，台灣官網常有澡盆+架同捆優惠',
-        notes: 'Bum Bump 底座能卡住寶寶屁股不滑脫，單人輕鬆洗；搭配專用立架洗澡免彎腰保護腰椎。'
-      },
-      {
-        cat: 'bath',
-        name: '貝親新生兒圓頭指甲剪',
-        qty: '1 支',
-        status: 'must',
-        price: '約 NT$ 200',
-        brand: '日本貝親 Pigeon 新生兒專用小剪刀 (黃柄/白柄)',
-        channel: '🇯🇵 日本阿卡將、各大藥妝店；🇹🇼 台灣各大母嬰用品店',
-        isJpHighlight: true,
-        jpNote: '🇯🇵 【日本必買】日幣換算台幣只要約 NT$130～180 (台灣約賣320元)，刀刃薄、手感回饋極好',
-        notes: '新生兒指甲薄軟長得快，專用小剪刀能精準修剪，防止抓傷粉嫩臉頰。'
-      },
-      {
-        cat: 'bath',
-        name: '屁屁膏 / 凡士林 / 馬油',
-        qty: '2 條',
-        status: 'must',
-        price: '約 NT$ 500',
-        brand: '慕之恬廊 (衛蓓欣VBC)、健榮製藥 (Baby Vaseline)、Madonna 嬰兒馬油',
-        channel: '🇯🇵 健榮凡士林/Madonna馬油在日本藥妝必掃；🇹🇼 慕之恬廊在台灣藥局買',
-        isJpHighlight: true,
-        jpNote: '🇯🇵 【日本必買】健榮製藥管狀凡士林、Madonna馬油在日本藥妝超便宜，滋潤不黏膩',
-        notes: '含氧化鋅成分能在肌膚表面形成透氣保護膜，每次水洗屁屁擦乾後薄擦預防紅屁屁。'
-      },
-      {
-        cat: 'bath',
-        name: '純水厚款濕紙巾',
-        qty: '1 箱',
-        status: 'must',
-        price: '約 NT$ 650',
-        brand: 'Hoppi、滿意寶寶 (純水99%)、NUK',
-        channel: '🇹🇼 momo 購物網、Costco 好市多 (整箱免運宅配到府)',
-        jpNote: '❌ 極重耗體力，台灣電商箱購特價常有買一送一活動',
-        notes: '新生兒每天排便 5～8 次消耗量大！挑選無香精、不連抽、紙質厚實款不易破。'
-      },
-      {
-        cat: 'bath',
-        name: '知母時手動負壓吸鼻器',
-        qty: '1 組',
-        status: 'maybe',
-        price: '約 NT$ 390',
-        brand: '知母時',
-        channel: '🇹🇼 台灣各大藥局 (大樹、丁丁、杏一)、蝦皮直營店',
-        jpNote: '台灣專利製造醫療器材，在台灣藥局買最齊全便宜',
-        notes: '新生兒鼻道狹窄常有乳塊或濃鼻涕，免插電負壓抽取溫和不傷鼻黏膜，感冒神器。'
-      },
-
-      // 外出與衣物
-      {
-        cat: 'out',
-        name: '新生兒提籃式汽座',
-        qty: '1 台',
-        status: 'must',
-        price: '約 NT$ 4,500',
-        brand: 'Joie (i-Snug 2)、Nuna (Pipa 系列)',
-        channel: '🇹🇼 台灣奇哥專櫃、安琪兒、baby888門市 (可請店員現場示範汽車安裝)',
-        jpNote: '❌ 體積龐大有安規核定考量，台灣購買附合台灣 CNS 11497 規範與保固',
-        notes: '法規強制規定！出院與打預防針乘車必備。提籃式能上下車無縫移動不吵醒熟睡寶寶。'
-      },
-      {
-        cat: 'out',
-        name: '平躺型推車 (相容提籃)',
-        qty: '1 台',
-        status: 'must',
-        price: '約 NT$ 9,500',
-        brand: 'Cybex (Libelle/Melio)、Joie (Tourist)、Nuna (TRVL)',
-        channel: '🇹🇼 實體母嬰門市試推試收；🇯🇵 Cybex 於 Bic Camera 退稅折價價差大',
-        jpNote: '✨ 視行李額度：Cybex 推車在日本 Bic Camera 搭配 10%+7% 券可省約2-3千，但需注意無台灣保固',
-        notes: '新生兒骨骼發育中，需挑選椅背可170°-175°平躺或可卡合提籃轉接系統之車款。'
-      },
-      {
-        cat: 'out',
-        name: '前開襟蝴蝶衣/包屁衣',
-        qty: '5～6 件',
-        status: 'must',
-        price: '約 NT$ 1,500',
-        brand: 'Uniqlo (前開連身衣60cm)、西松屋、阿卡將本舖',
-        channel: '🇯🇵 日本西松屋(平價首選，一件不到NT$80)；🇹🇼 台灣 Uniqlo / Lativ',
-        isJpHighlight: true,
-        jpNote: '🇯🇵 【日本必買】西松屋純棉包屁衣與蝴蝶衣2-3件組只要日幣幾百元，新生兒炸屎髒掉不心疼',
-        notes: '新生兒脖子軟，務必選擇「前開壓扣/綁帶」款式，嚴格避開套頭款。'
-      },
-      {
-        cat: 'out',
-        name: '人體工學嬰兒背巾',
-        qty: '1 條',
-        status: 'maybe',
-        price: '約 NT$ 4,800',
-        brand: 'Ergobaby (Omni Breeze)、Pognae',
-        channel: '🇹🇼 百貨專櫃親自試背；🇯🇵 日本阿卡將本舖款式齊全',
-        jpNote: '滿月後再買！務必帶寶寶親自到門市試背確認背負減壓感與M型腿合身度',
-        notes: '第一個月外出機會少；確認腰椎與肩膀負重分擔效果後再下手。'
-      },
-
-      // 避坑清單
-      {
-        cat: 'avoid',
-        name: '厚棉嬰兒床圍',
-        qty: '0',
-        status: 'avoid',
-        price: 'NT$ 0',
-        brand: '❌ 不建議購買任何品牌',
-        channel: '🚫 勿買',
-        jpNote: '具高窒息風險',
-        notes: '台灣與美國兒科醫學會嚴正警告：厚床圍大幅增加口鼻遮蔽窒息猝死風險，嬰兒床內務必保持淨空！'
-      },
-      {
-        cat: 'avoid',
-        name: '嬰兒定型枕 / 護頭枕',
-        qty: '0',
-        status: 'avoid',
-        price: 'NT$ 0',
-        brand: '❌ 不建議購買任何品牌',
-        channel: '🚫 勿買',
-        jpNote: '1歲前不需要枕頭',
-        notes: '一歲前脊椎平直無弧度，枕頭會壓迫呼吸道；側睡翻身易掩蓋口鼻引發窒息危險。'
-      },
-      {
-        cat: 'avoid',
-        name: '傳統嬰兒爽身粉',
-        qty: '0',
-        status: 'avoid',
-        price: 'NT$ 0',
-        brand: '❌ 不建議購買任何品牌',
-        channel: '🚫 勿買',
-        jpNote: '有吸入性肺炎風險',
-        notes: '粉塵易被吸入呼吸道；流汗後粉末結塊反而堵塞汗腺，引發嚴重汗疹與尿布疹。薄擦氧化鋅屁屁膏即可。'
-      },
-      {
-        cat: 'avoid',
-        name: '奶瓶定溫保溫套',
-        qty: '0',
-        status: 'avoid',
-        price: 'NT$ 0',
-        brand: '❌ 不建議購買任何品牌',
-        channel: '🚫 勿買',
-        jpNote: '容易成為細菌溫床',
-        notes: '加熱極慢；且泡好的奶若在微溫狀態下放置超過1小時，細菌會呈指數級滋生，增加寶寶腸胃炎風險。'
-      }
-    ];
-
-    let currentTab = 'all';
-
-    function renderItems(filterText = '') {
-      const container = document.getElementById('itemList');
-      container.innerHTML = '';
-      
-      let filtered = items.filter(item => {
-        // Tab matching
-        if (currentTab === 'jp' && !item.isJpHighlight && !item.jpNote.includes('【日本必買】')) return false;
-        if (currentTab === 'avoid' && item.status !== 'avoid') return false;
-        if (currentTab !== 'all' && currentTab !== 'jp' && currentTab !== 'avoid' && item.cat !== currentTab) return false;
-        if (currentTab === 'all' && item.status === 'avoid') return false; // Hide avoid in general all tab to keep clean
-
-        // Text search matching
-        if (filterText) {
-          const searchStr = `${item.name} ${item.brand} ${item.channel} ${item.jpNote} ${item.notes}`.toLowerCase();
-          return searchStr.includes(filterText.toLowerCase());
-        }
-        return true;
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#A0AEC0;">沒有找到相符的商品項目</div>';
-        return;
-      }
-
-      filtered.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.id = `card-${index}`;
-
-        let badgeHtml = '';
-        if (item.status === 'must') badgeHtml = '<span class="badge badge-must">★ 必買推薦</span>';
-        else if (item.status === 'maybe') badgeHtml = '<span class="badge badge-maybe">▲ 視情況買</span>';
-        else badgeHtml = '<span class="badge badge-avoid">✕ 避坑勿買</span>';
-
-        if (item.isJpHighlight) {
-          badgeHtml += '<span class="badge badge-jp">🇯🇵 日本必買</span>';
-        }
-
-        card.innerHTML = `
-          <div class="card-top">
-            <div class="checkbox-wrap" onclick="toggleCheck('${card.id}')">
-              <div class="check-btn">✓</div>
-              <div>
-                <span class="item-name">${item.name}</span>
-                <span class="item-qty">(${item.qty})</span>
-              </div>
-            </div>
-            <div>${badgeHtml}</div>
-          </div>
-
-          <div class="brand-row">
-            <span class="brand-label">推薦品牌型號：</span>
-            <span class="brand-name">${item.brand}</span>
-          </div>
-
-          <div class="channel-row">
-            <span class="channel-tag">建議購買處</span>
-            <span class="channel-desc">${item.channel}</span>
-          </div>
-
-          ${item.jpNote ? `
-          <div class="channel-row" style="background:#FFF5F5;padding:6px;border-radius:6px;margin:4px 0;">
-            <span class="channel-tag" style="background:#FED7D7;color:#9B2C2C;">日本採購指引</span>
-            <span class="channel-desc" style="color:#9B2C2C;font-size:0.8rem;">${item.jpNote}</span>
-          </div>
-          ` : ''}
-
-          <div class="note-row">${item.notes}</div>
-
-          <div class="price-row">預估預算：${item.price}</div>
-        `;
-        container.appendChild(card);
-      });
-
-      updateProgress();
-    }
-
-    function toggleCheck(cardId) {
-      const card = document.getElementById(cardId);
-      card.classList.toggle('checked');
-      updateProgress();
-    }
-
-    function updateProgress() {
-      const mustItems = items.filter(i => i.status === 'must');
-      const checkedCards = document.querySelectorAll('.item-card.checked');
-      document.getElementById('progressVal').innerText = `${checkedCards.length} / ${mustItems.length} 項`;
-    }
-
-    function switchTab(tab, el) {
-      currentTab = tab;
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('searchInput').value = '';
-      renderItems();
-    }
-
-    function filterItems() {
-      const text = document.getElementById('searchInput').value;
-      renderItems(text);
-    }
-
-    // Initialize
-    renderItems();
-  </script>
-</body>
-</html>
+    .item-name { font-size: 0.98rem; font-weight: 700; color: #1A202C; }
